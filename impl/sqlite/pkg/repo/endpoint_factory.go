@@ -3,9 +3,6 @@ package repo
 import (
 	"context"
 	"database/sql"
-	"errors"
-	"fmt"
-	"os"
 )
 
 type (
@@ -21,14 +18,7 @@ func (d defaultEndpointFactory) CreateEndpoint(_ context.Context) Endpoint {
 }
 
 func NewEndpointFactory(config Config, provider LoggerProvider) EndpointFactory {
-	logger := provider(nil)
-	logger.Info("NewEndpointFactory", "sqlite3_db", config.SQLite3Source)
-	dir, err := os.Getwd()
-	logger.Info("NewEndpointFactory", "PWD", dir)
-	db, err := sql.Open("sqlite3", config.SQLite3Source)
-	if err != nil {
-		panic(errors.Join(err, fmt.Errorf("NewEndpointFactory: failed to open database %s", config.SQLite3Source)))
-	}
+	db := NewSQLDB(config.SQLite3Source, provider)
 	return defaultEndpointFactory{
 		db: db,
 	}

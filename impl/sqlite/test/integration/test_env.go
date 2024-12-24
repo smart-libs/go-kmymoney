@@ -8,7 +8,6 @@ import (
 	"context"
 	"github.com/smart-libs/go-kmymoney/impl/sqlite/pkg/repo"
 	"log/slog"
-	"os"
 )
 
 type TestEnv struct {
@@ -20,7 +19,7 @@ func loggerProvider(_ context.Context) *slog.Logger { return slog.Default() }
 
 func Run(t *testing.T, test func(env *TestEnv)) {
 	ctx := context.Background()
-	config := repo.Config{SQLite3Source: os.Getenv("SQLITE3_DB")}
+	config := repo.NewConfig()
 	factory := repo.NewEndpointFactory(config, loggerProvider)
 	endpoint := factory.CreateEndpoint(ctx)
 	ctx = repo.NewContextWithEndpoint(ctx, endpoint)
