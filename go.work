@@ -1,0 +1,7 @@
+go 1.22.10
+
+use (
+	fx/sqlite
+	impl/sqlite
+	spec/lib
+)
