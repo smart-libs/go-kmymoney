@@ -10,4 +10,5 @@ var Module = fx.Module("go-kmymoney/sqlite", fx.Provide(
 	repocurrencies.NewGetCurrencyByISOCodeService,
 	reposecurities.NewGetNextSecurityIDService,
 	reposecurities.NewSaveSecurityService,
+	reposecurities.NewFindSecurityBySymbolService,
 ))
