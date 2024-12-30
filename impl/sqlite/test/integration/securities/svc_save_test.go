@@ -24,6 +24,13 @@ func TestSaveSecurityService(t *testing.T) {
 		t.Run("I can create a new Security", func(t *testing.T) {
 			savedSecurity := svc.SaveSecurity(env.Context, security)
 			assert.Equal(t, "E000001", savedSecurity.ID())
+			assert.Equal(t, symbol, savedSecurity.Symbol())
+			assert.Equal(t, specSecurities.Stock, savedSecurity.Type())
+			assert.Equal(t, "Stock", savedSecurity.Type().String())
+			assert.Equal(t, 2, savedSecurity.PricePrecision())
+			assert.Equal(t, "100", savedSecurity.SmallestAccountFraction())
+			assert.Equal(t, "BRL", savedSecurity.TradingCurrency())
+			assert.Equal(t, 7, savedSecurity.RoundingMethod())
 		})
 		t.Run("I can get a Security by ID", func(t *testing.T) {
 			finder := reposecurities.NewFindSecurityBySymbolService(env.LoggerProvider)
