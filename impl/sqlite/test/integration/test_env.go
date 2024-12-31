@@ -12,10 +12,19 @@ import (
 
 type TestEnv struct {
 	context.Context
+	t              *testing.T
+	Endpoint       repo.Endpoint
 	LoggerProvider func(_ context.Context) *slog.Logger
 }
 
 func loggerProvider(_ context.Context) *slog.Logger { return slog.Default() }
+
+func (env TestEnv) ExecSQL(cmd string) {
+	_, err := env.Endpoint.GetDB().Exec(cmd)
+	if !assert.NoError(env.t, err) {
+		panic(err)
+	}
+}
 
 func Run(t *testing.T, test func(env *TestEnv)) {
 	ctx := context.Background()
@@ -24,11 +33,17 @@ func Run(t *testing.T, test func(env *TestEnv)) {
 	endpoint := factory.CreateEndpoint(ctx)
 	ctx = repo.NewContextWithEndpoint(ctx, endpoint)
 
-	_, err := endpoint.GetDB().Exec("delete from kmmSecurities")
-	if assert.NoError(t, err) {
-		test(&TestEnv{
-			Context:        ctx,
-			LoggerProvider: loggerProvider,
-		})
+	env := &TestEnv{
+		Context:        ctx,
+		t:              t,
+		Endpoint:       endpoint,
+		LoggerProvider: loggerProvider,
 	}
+
+	env.ExecSQL("delete from kmmSecurities")
+	env.ExecSQL("delete from kmmAccounts")
+	env.ExecSQL("delete from kmmTransactions")
+	env.ExecSQL("delete from kmmSplits")
+
+	test(env)
 }

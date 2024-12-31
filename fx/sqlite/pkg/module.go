@@ -3,8 +3,10 @@ package kmymoneysqlite
 import (
 	"context"
 	"github.com/smart-libs/go-kmymoney/impl/sqlite/pkg/repo"
+	repoaccounts "github.com/smart-libs/go-kmymoney/impl/sqlite/pkg/repo/accounts"
 	repocurrencies "github.com/smart-libs/go-kmymoney/impl/sqlite/pkg/repo/currencies"
 	reposecurities "github.com/smart-libs/go-kmymoney/impl/sqlite/pkg/repo/securities"
+	repotransactions "github.com/smart-libs/go-kmymoney/impl/sqlite/pkg/repo/transactions"
 	"go.uber.org/fx"
 	"log/slog"
 )
@@ -19,6 +21,8 @@ var Module = fx.Module("go-kmymoney/sqlite", fx.Provide(
 	reposecurities.NewGetNextSecurityIDService,
 	reposecurities.NewSaveSecurityService,
 	reposecurities.NewFindSecurityBySymbolService,
+	repoaccounts.NewFindAccountBySecuritySymbolService,
+	repotransactions.NewFindAllSplitTransactionsByAccountIDService,
 	repo.NewConfig,
 	repo.NewEndpointFactory,
 ))
